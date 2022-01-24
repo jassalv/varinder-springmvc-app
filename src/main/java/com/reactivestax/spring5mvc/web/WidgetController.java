@@ -2,6 +2,7 @@ package com.reactivestax.spring5mvc.web;
 
 import com.reactivestax.spring5mvc.model.Widget;
 import com.reactivestax.spring5mvc.repository.WidgetRepository;
+import com.reactivestax.spring5mvc.repository.WidgetRepositoryImp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,6 +16,9 @@ public class WidgetController {
 
     @Autowired
     private WidgetRepository widgetRepository;
+
+    @Autowired
+    WidgetRepositoryImp widgetRepositoryImp;
 
     /**
      * Load the new widget page.
@@ -35,7 +39,7 @@ public class WidgetController {
      */
     @PostMapping("/widget")
     public String createWidget(Widget widget, Model model) {
-        widgetRepository.save(widget);
+        widgetRepositoryImp.save(widget);
         return "redirect:/widget/" + widget.getId();
     }
 

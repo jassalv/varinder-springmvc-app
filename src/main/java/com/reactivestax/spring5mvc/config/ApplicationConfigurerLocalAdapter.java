@@ -10,6 +10,8 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 
+import javax.sql.DataSource;
+
 import static com.reactivestax.spring5mvc.constants.CommonConstants.*;
 
 
@@ -35,4 +37,6 @@ public class ApplicationConfigurerLocalAdapter extends WebMvcConfigurationSuppor
         registry.addInterceptor(accessLogsHandlerInterceptor)
                 .addPathPatterns("/rest/**");
     }
+
+
 }
