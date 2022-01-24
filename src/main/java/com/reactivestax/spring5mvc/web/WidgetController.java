@@ -54,7 +54,7 @@ public class WidgetController {
 //        model.addAttribute("widget", widgetRepository.findById(id).orElse(new Widget()));
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("widget");
-        modelAndView.addObject("widget", widgetRepository.findById(id).orElse(new Widget()));
+        modelAndView.addObject("widget", widgetRepositoryImp.findById(Math.toIntExact(id)));
         return  modelAndView;
     }
 
