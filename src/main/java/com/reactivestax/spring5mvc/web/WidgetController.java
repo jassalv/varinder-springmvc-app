@@ -77,7 +77,7 @@ public class WidgetController {
      */
     @GetMapping("/widget/edit/{id}")
     public String editWidget(@PathVariable Long id, Model model) {
-        model.addAttribute("widget", widgetRepository.findById(id).orElse(new Widget()));
+        model.addAttribute("widget", widgetRepositoryImp.findById(Math.toIntExact(id)));
         return "widgetform";
     }
 
