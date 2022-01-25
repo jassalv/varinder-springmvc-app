@@ -11,6 +11,9 @@ import org.springframework.stereotype.Repository;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 @Repository
 public class WidgetRepositoryImp implements WidgetRepository1{
@@ -42,6 +45,36 @@ public class WidgetRepositoryImp implements WidgetRepository1{
     public Widget findById(Integer id) {
         String query = "select id, Name, Description from widget_details where id = ?";
         Widget widget = jdbcTemplate.queryForObject(query, new Object[]{id}, new BeanPropertyRowMapper<>(Widget.class));
+        return widget;
+    }
+
+    @Override
+    public Integer deleteById(Integer id) {
+        String query = "delete from widget_details where Id=?";
+        return jdbcTemplate.update(query, id);
+    }
+
+    @Override
+    public List<Widget> findAll() {
+        String query = "select Id, Name, Description from widget_details";
+        List<Widget> widgets = new ArrayList<>();
+        List<Map<String, Object>> widgetRows = jdbcTemplate.queryForList(query);
+
+        for (Map<String, Object> widgetRow : widgetRows) {
+            Widget wid = new Widget();
+            wid.setId(Long.parseLong(widgetRow.get("Id").toString()));
+            wid.setName((String) widgetRow.get("Name"));
+            wid.setDescription((String) widgetRow.get("Description"));
+            widgets.add(wid);
+        }
+        return widgets;
+    }
+
+    @Override
+    public Widget update(Widget widget) {
+        String query = "update widget_details set Name=?, Description=? where Id=?";
+        Object[] args = new Object[]{widget.getName(), widget.getDescription(), widget.getId()};
+        int out = jdbcTemplate.update(query, args);
         return widget;
     }
 }

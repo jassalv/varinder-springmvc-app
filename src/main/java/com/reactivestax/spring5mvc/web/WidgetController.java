@@ -15,11 +15,9 @@ import org.springframework.web.servlet.ModelAndView;
 public class WidgetController {
 
     @Autowired
-    private WidgetRepository widgetRepository;
-
-    @Autowired
     WidgetRepositoryImp widgetRepositoryImp;
 
+    private Widget widget1 =null;
     /**
      * Load the new widget page.
      * @param model
@@ -39,7 +37,12 @@ public class WidgetController {
      */
     @PostMapping("/widget")
     public String createWidget(Widget widget, Model model) {
-        widgetRepositoryImp.save(widget);
+        if(widget1==null) {
+            widgetRepositoryImp.save(widget);
+        }else{
+            widgetRepositoryImp.update(widget);
+            widget1=null;
+        }
         return "redirect:/widget/" + widget.getId();
     }
 
@@ -51,7 +54,6 @@ public class WidgetController {
      */
     @GetMapping("/widget/{id}")
     public ModelAndView getWidgetById(@PathVariable Long id, Model model) {
-//        model.addAttribute("widget", widgetRepository.findById(id).orElse(new Widget()));
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("widget");
         modelAndView.addObject("widget", widgetRepositoryImp.findById(Math.toIntExact(id)));
@@ -65,7 +67,7 @@ public class WidgetController {
      */
     @GetMapping("/widgets")
     public String getWidgets(Model model) {
-        model.addAttribute("widgets", widgetRepository.findAll());
+        model.addAttribute("widgets", widgetRepositoryImp.findAll());
         return "widgets";
     }
 
@@ -77,7 +79,8 @@ public class WidgetController {
      */
     @GetMapping("/widget/edit/{id}")
     public String editWidget(@PathVariable Long id, Model model) {
-        model.addAttribute("widget", widgetRepositoryImp.findById(Math.toIntExact(id)));
+        widget1 = widgetRepositoryImp.findById(Math.toIntExact(id));
+       model.addAttribute("widget", widget1);
         return "widgetform";
     }
 
@@ -88,7 +91,7 @@ public class WidgetController {
      */
     @PostMapping("/widget/{id}")
     public String updateWidget(Widget widget) {
-        widgetRepository.save(widget);
+        widgetRepositoryImp.save(widget);
         return "redirect:/widget/" + widget.getId();
     }
 
@@ -99,7 +102,7 @@ public class WidgetController {
      */
     @GetMapping("/widget/delete/{id}")
     public String deleteWidget(@PathVariable  Long id) {
-        widgetRepository.deleteById(id);
+        widgetRepositoryImp.deleteById(Math.toIntExact(id));
         return "redirect:/widgets";
     }
 }
