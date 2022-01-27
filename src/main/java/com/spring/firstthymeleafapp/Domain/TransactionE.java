@@ -9,9 +9,10 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Transaction {
-    String name=null;
-    Double amount=0.0;
+public class TransactionE {
+
+    String name = null;
+    Double amount = 0.0;
     Integer id;
 
     @Override
@@ -21,6 +22,7 @@ public class Transaction {
                 ", amount=" + amount + '\'' + " id " + id +
                 '}';
     }
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj)
@@ -29,7 +31,7 @@ public class Transaction {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        Transaction other = (Transaction) obj;
+        TransactionE other = (TransactionE) obj;
         return other.getId() == this.getId();
     }
 

@@ -5,25 +5,22 @@ import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import javax.sql.DataSource;
 
 @Configuration
-@PropertySource("db.properties")
 public class DaoConfiguration {
 
-    @Value("${jdbcUrl}")
+    @Value("${spring.datasource.url}")
     String url;
-    @Value("${dataSource.user}")
+    @Value("${spring.dataSource.user}")
     String username;
-    @Value("${dataSource.password}")
+    @Value("${spring.dataSource.password}")
     String password;
 
     @Bean
     public DataSource createDataSource() {
-
         HikariConfig config = new HikariConfig();
         config.setDriverClassName("com.mysql.jdbc.Driver");
         config.setJdbcUrl(url);
