@@ -1,85 +1,85 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymleaf.org">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-  <link rel="stylesheet"  th:href="@{css/styles.css}" />
-  <title>Expense Tracker</title>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+    <link rel="stylesheet"  th:href="@{/css/styles.css}"/>
+    <title>Expense Tracker</title>
 </head>
 <body>
 <h2>Expense Tracker</h2>
 <div class="container">
-  <h4>Your Balance</h4>
-  <h1 id="balance" th:text="${totalbalance}">$0.00</h1>
+    <h4>Your Balance</h4>
+    <h1 id="balance" th:text="${totalbalance}">$0.00</h1>
 
-  <div class="inc-exp-container">
-    <div >
-      <h4>Income</h4>
-      <p id="money-plus" th:text="${totalincome}"class="money plus">+$0.00</p>
+    <div class="inc-exp-container">
+        <div>
+            <h4>Income</h4>
+            <p id="money-plus" th:text="${totalincome}" class="money plus">+$0.00</p>
+        </div>
+        <div>
+            <h4>Expense</h4>
+            <p id="money-minus" th:text="${totalexpenses}" class="money minus">-$0.00</p>
+        </div>
     </div>
-    <div>
-      <h4>Expense</h4>
-      <p id="money-minus" th:text="${totalexpenses}" class="money minus">-$0.00</p>
-    </div>
-  </div>
 
-  <div class="container">
-    <table class="table">
-      <h2>Income History</h2>
-      <tr>
-        <th>Name</th>
-        <th>Amount</th>
-        <th>Edit</th>
-        <th>Delete</th>
-      </tr>
-      <tr th:each="tracker : ${incometrackerlist}" th:object="${tracker}">
-        <td th:text="*{name}">Name</td>
-        <td th:text="*{amount}">Amount</td>
-        <td><a class="btn btn-default" href="#" th:href="@{'/home/edit/income/' + *{id}}">Edit</a> </td>
-        <td><a class="btn btn-default" href="#" th:href="@{'/home/delete/income/' + *{id}}">Delete</a> </td>
-      </tr>
-    </table>
-    <table class="table">
-      <h2>Money Spent History</h2>
-      <tr>
-        <th>Name</th>
-        <th>Amount</th>
-        <th>Edit</th>
-        <th>Delete</th>
-      </tr>
-      <tr th:each="tracker : ${spentList}" th:object="${tracker}">
-        <td th:text="*{name}">Name</td>
-        <td th:text="*{amount}">Amount</td>
-        <td><a class="btn btn-default" href="#" th:href="@{'/home/edit/expense/' + *{id}}">Edit</a> </td>
-        <td><a class="btn btn-default" href="#" th:href="@{'/home/delete/expense/' + *{id}}">Delete</a> </td>
-      </tr>
-    </table>
-  </div>
-
-  <!--      <h3>History</h3>-->
-  <ul id="list" class="list">
-    <!-- <li class="minus">
-      Cash <span>-$400</span><button class="delete-btn">x</button>
-    </li> -->
-  </ul>
-
-  <h3>Add new transaction</h3>
-  <form id="form" th:object="${transaction}" th:action="@{/home/adding}" method="post">
-    <input type="hidden" th:field="*{id}" />
-    <div class="form-control">
-      <label for="text">Text</label>
-      <input type="text" th:field="*{name}" id="text" placeholder="Enter text..." />
+    <div class="container">
+        <table class="table">
+            <h2>Income History</h2>
+            <tr>
+                <th>Name</th>
+                <th>Amount</th>
+                <th>Edit</th>
+                <th>Delete</th>
+            </tr>
+            <tr th:each="tracker : ${incometrackerlist}" th:object="${tracker}">
+                <td th:text="*{name}">Name</td>
+                <td th:text="*{amount}">Amount</td>
+                <td><a class="btn btn-default" href="#" th:href="@{'/home/edit/income/' + *{id}}">Edit</a></td>
+                <td><a class="btn btn-default" href="#" th:href="@{'/home/delete/income/' + *{id}}">Delete</a></td>
+            </tr>
+        </table>
+        <table class="table">
+            <h2>Money Spent History</h2>
+            <tr>
+                <th>Name</th>
+                <th>Amount</th>
+                <th>Edit</th>
+                <th>Delete</th>
+            </tr>
+            <tr th:each="tracker : ${spentList}" th:object="${tracker}">
+                <td th:text="*{name}">Name</td>
+                <td th:text="*{amount}">Amount</td>
+                <td><a class="btn btn-default" href="#" th:href="@{'/home/edit/expense/' + *{id}}">Edit</a></td>
+                <td><a class="btn btn-default" href="#" th:href="@{'/home/delete/expense/' + *{id}}">Delete</a></td>
+            </tr>
+        </table>
     </div>
-    <div class="form-control">
-      <label for="amount"
-      >Amount <br />
-        (negative - tracker, positive - income)</label
-      >
-      <input type="number" th:field="*{amount}" id="amount" placeholder="Enter amount..." />
-    </div>
-    <button class="btn">Add transaction</button>
-  </form>
+
+    <!--      <h3>History</h3>-->
+    <ul id="list" class="list">
+        <!-- <li class="minus">
+          Cash <span>-$400</span><button class="delete-btn">x</button>
+        </li> -->
+    </ul>
+
+    <h3>Add new transaction</h3>
+    <form id="form" th:object="${transaction}" th:action="@{/home/adding}" method="post">
+        <input type="hidden" th:field="*{id}"/>
+        <div class="form-control">
+            <label for="text">Text</label>
+            <input type="text" th:field="*{name}" id="text" placeholder="Enter text..."/>
+        </div>
+        <div class="form-control">
+            <label for="amount"
+            >Amount <br/>
+                (negative - tracker, positive - income)</label
+            >
+            <input type="number" th:field="*{amount}" id="amount" placeholder="Enter amount..."/>
+        </div>
+        <button class="btn">Add transaction</button>
+    </form>
 </div>
 
 <script src="../static/js/script.js" th:src="@{/js/script.js}"></script>
