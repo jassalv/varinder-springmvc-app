@@ -39,17 +39,24 @@ public class MoneySpentTransactionService implements Processor<MoneySpendTransac
     }
 
     @Override
-    public MoneySpendTransaction findTransaction(Integer id) {
+    public MoneySpendTransaction findTransaction(TransactionE transactionE) {
         Optional<MoneySpendTransaction> first = listOfIncomeTransaction().stream()
-                .filter(p -> p.getId().equals(id)).findFirst();
-        if(first == null){
+                .filter(p -> p.getId().equals(transactionE.getId())
+                        && p.getName().equals(transactionE.getName())).findFirst();
+        if(first.isEmpty()){
             return null;
         }
-        return moneySpentDao.findById(id);
+        System.out.println(first.toString());
+        return moneySpentDao.findById(transactionE.getId());
     }
 
     @Override
     public TransactionE updateTransaction(TransactionE moneySpendTransaction) {
         return moneySpentDao.update(moneySpendTransaction);
+    }
+
+    @Override
+    public MoneySpendTransaction findTransactionById(Integer id) {
+        return moneySpentDao.findById(id);
     }
 }

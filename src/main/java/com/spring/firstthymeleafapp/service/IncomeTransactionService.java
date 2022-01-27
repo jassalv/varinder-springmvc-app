@@ -38,16 +38,24 @@ public class IncomeTransactionService implements Processor<IncomeTransaction> {
         return listOfIncomeTransaction().stream().mapToDouble(TransactionE::getAmount).sum();
     }
 
+
     @Override
-    public IncomeTransaction findTransaction(Integer id) {
-        Optional<IncomeTransaction> first = listOfIncomeTransaction().stream().filter(p -> p.getId().equals(id)).findFirst();
-        if(first == null){
+    public IncomeTransaction findTransaction(TransactionE transactionE) {
+        Optional<IncomeTransaction> first = listOfIncomeTransaction().stream()
+                .filter(p -> p.getId().equals(transactionE.getId())
+                        && p.getName().equals(transactionE.getName())).findFirst();
+        if(first.isEmpty()){
             return null;
         }
-        return incomeDao.findById(id);
+        System.out.println(first.toString());
+        return incomeDao.findById(transactionE.getId());
     }
 
     public TransactionE updateTransaction(TransactionE incomeTransaction){
         return incomeDao.update(incomeTransaction);
+    }
+    @Override
+    public IncomeTransaction findTransactionById(Integer id) {
+        return incomeDao.findById(id);
     }
 }

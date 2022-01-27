@@ -70,7 +70,7 @@ public class IncomeDao implements CrudOperations<IncomeTransaction>{
 
     @Override
     public TransactionE update(TransactionE incomeTransaction) {
-        String query = "update expenses set name=?, amount=? where Id=?";
+        String query = "update income set name=?, amount=? where Id=?";
         Object[] args = new Object[]{incomeTransaction.getName(), incomeTransaction.getAmount(), incomeTransaction.getId()};
         int out = jdbcTemplate.update(query, args);
         return incomeTransaction;
