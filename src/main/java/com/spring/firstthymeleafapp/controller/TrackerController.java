@@ -31,21 +31,12 @@ public class TrackerController {
 
     @GetMapping("/home")
     String getHomePage(Model model) {
-        if (incomeTransactionService.listOfIncomeTransaction().isEmpty()) {
             model.addAttribute("totalbalance", totalAmountCalculatorService.calculateTotalBalance());
             model.addAttribute("totalincome", incomeTransactionService.total());
             model.addAttribute("totalexpenses", moneySpentTransactionService.total());
             model.addAttribute("incometrackerlist", incomeTransactionService.listOfIncomeTransaction());
             model.addAttribute("spentList", moneySpentTransactionService.listOfIncomeTransaction());
             model.addAttribute("transaction", new TransactionE());
-        } else {
-            model.addAttribute("totalbalance", totalAmountCalculatorService.calculateTotalBalance());
-            model.addAttribute("totalincome", incomeTransactionService.total());
-            model.addAttribute("totalexpenses", moneySpentTransactionService.total());
-            model.addAttribute("incometrackerlist", incomeTransactionService.listOfIncomeTransaction());
-            model.addAttribute("spentList", moneySpentTransactionService.listOfIncomeTransaction());
-            model.addAttribute("transaction", new TransactionE());
-        }
         return "home";
     }
 
