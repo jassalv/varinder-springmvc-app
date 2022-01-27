@@ -1,6 +1,11 @@
 package com.spring.firstthymeleafapp.controller;
-
-import com.spring.firstthymeleafapp.ExpenseTracker;
+import com.spring.firstthymeleafapp.Domain.Transaction;
+import com.spring.firstthymeleafapp.Domain.IncomeTracker;
+import com.spring.firstthymeleafapp.abstractclasses.Tracker;
+import com.spring.firstthymeleafapp.service.IncomeTrackerService;
+import com.spring.firstthymeleafapp.Domain.MoneySpendTracker;
+import com.spring.firstthymeleafapp.service.MoneySpentTrackerService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -8,61 +13,87 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Controller
 public class TrackerController {
 
-    List<ExpenseTracker> expenseTrackerList = new ArrayList<>();
-    ExpenseTracker expenseTracker2 = new ExpenseTracker();
-    Double income =0.0;
-    Double expenses=0.0;
+    @Autowired
+    IncomeTracker incomeTracker;
+    @Autowired
+    MoneySpendTracker moneySpendTracker;
+    @Autowired
+    IncomeTrackerService incomeTrackerService;
+    @Autowired
+    MoneySpentTrackerService moneySpentTrackerService;
     Integer id=0;
-
     @GetMapping("/home")
     String getHomePage(Model model){
-        if(expenseTrackerList.isEmpty()) {
-            model.addAttribute("expense",new ExpenseTracker());
-            model.addAttribute("expenses",new ArrayList<>());
-            model.addAttribute("expense1", new ExpenseTracker());
+        if(incomeTracker.getTransaction().isEmpty()) {
+            model.addAttribute("totalbalance", incomeTracker.getTotalBalance());
+            model.addAttribute("totalincome",incomeTrackerService.total());
+            model.addAttribute("totalexpenses",moneySpentTrackerService.total());
+            model.addAttribute("incometrackerlist",incomeTracker.getTransaction());
+            model.addAttribute("spentList", moneySpendTracker.getTransaction());
+            model.addAttribute("transaction", new Transaction());
         }else{
-
-            expenseTracker2.setAmount(expenseTrackerList.stream().mapToDouble(ExpenseTracker::getAmount).sum());
-            ExpenseTracker expenseTracker =new ExpenseTracker();
-            model.addAttribute("expense", expenseTracker2);
-            model.addAttribute("expenses", expenseTrackerList);
-            model.addAttribute("expense1", expenseTracker);
+            model.addAttribute("totalbalance", incomeTracker.getTotalBalance());
+            model.addAttribute("totalincome",incomeTrackerService.total());
+            model.addAttribute("totalexpenses",moneySpentTrackerService.total());
+            model.addAttribute("incometrackerlist",incomeTracker.getTransaction());
+            model.addAttribute("spentList", moneySpendTracker.getTransaction());
+            model.addAttribute("transaction", new Transaction());
         }
-        System.out.println(expenseTrackerList.toString());
         return "home";
     }
 
     @PostMapping ("/home/adding")
-    String postItems(@ModelAttribute("expense") ExpenseTracker expenseTracker, Model model){
-       if(expenseTracker.getAmount()>0){
-           expenseTracker.setId(++id);
-           income+= expenseTracker.getAmount();
+    String postItems(@ModelAttribute("expense") Transaction transaction, Model model){
+       if(transaction.getAmount()>0){
+           System.out.println(incomeTracker.getTransaction());
+           if(incomeTracker.getTransaction().contains(transaction)){
+               System.out.println("I ham here");
+             incomeTracker.getTransaction().set(incomeTracker.getTransaction().indexOf(transaction),transaction);
+           }
+           transaction.setId(++id);
+           incomeTracker.addIncome(transaction.getAmount());
+           incomeTracker.getTransaction().add(transaction);
        }else{
-           expenseTracker.setId(++id);
-           expenses+= expenseTracker.getAmount();
+           transaction.setId(++id);
+           moneySpendTracker.addExpense(transaction.getAmount());
+           moneySpendTracker.getTransaction().add(transaction);
        }
-       expenseTrackerList.add(expenseTracker);
         return "redirect:/home";
     }
 
-    @GetMapping("/home/delete/{id}")
-    public String deleteWidget(@PathVariable Integer id) {
-        ExpenseTracker first = expenseTrackerList.stream().filter(p -> p.getId().equals(id)).findFirst().get();
-        expenseTrackerList.remove(first);
+    @GetMapping("/home/delete/income/{id}")
+    public String deleteIncome(@PathVariable Integer id) {
+        incomeTrackerService.deleteTransaction(id);
         return "redirect:/home";
     }
-    @GetMapping("/home/edit/{id}")
-    public String editWidget(@PathVariable Integer id, Model model) {
-        expenseTracker2.setAmount(expenseTrackerList.stream().mapToDouble(ExpenseTracker::getAmount).sum());
-        model.addAttribute("expense", expenseTracker2);
-        model.addAttribute("expense1", expenseTrackerList.stream().filter(p->p.getId().equals(id)).findFirst().get());
-        model.addAttribute("expenses", expenseTrackerList);
+
+    @GetMapping("/home/delete/expense/{id}")
+    public String deleteExpense(@PathVariable Integer id) {
+        moneySpentTrackerService.deleteTransaction(id);
+        return "redirect:/home";
+    }
+
+    @GetMapping("/home/edit/income/{id}")
+    public String editIncome(@PathVariable Integer id, Model model) {
+        model.addAttribute("totalbalance", incomeTracker.getTotalBalance());
+        model.addAttribute("totalincome",incomeTrackerService.total());
+        model.addAttribute("totalexpenses",moneySpentTrackerService.total());
+        model.addAttribute("incometrackerlist",incomeTracker.getTransaction());
+        model.addAttribute("spentList", moneySpendTracker.getTransaction());
+        model.addAttribute("transaction", incomeTracker.findTransaction(id));
+        return "home";
+    }
+    @GetMapping("/home/edit/expense/{id}")
+    public String editExpense(@PathVariable Integer id, Model model) {
+        model.addAttribute("totalbalance", incomeTracker.getTotalBalance());
+        model.addAttribute("totalincome",incomeTrackerService.total());
+        model.addAttribute("totalexpenses",moneySpentTrackerService.total());
+        model.addAttribute("incometrackerlist",incomeTracker.getTransaction());
+        model.addAttribute("spentList", moneySpendTracker.getTransaction());
+        model.addAttribute("transaction", moneySpendTracker.findTransaction(id));
         return "home";
     }
 }
