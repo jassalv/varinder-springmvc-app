@@ -53,7 +53,7 @@ public class TrackerController {
     String postItems(@ModelAttribute("expense") TransactionE transaction, Model model) {
 
         if (transaction.getId() != null && transaction.getAmount() >= 0) {
-            if (moneySpentTransactionService.findTransaction(transaction.getId()) == null) {
+            if (moneySpentTransactionService.findTransaction(transaction) == null) {
                 incomeTransactionService.updateTransaction(transaction);
                 return "redirect:/home";
             }
@@ -61,7 +61,7 @@ public class TrackerController {
             incomeTransactionService.addTransaction(transaction);
             return "redirect:/home";
         } else if (transaction.getId() != null && transaction.getAmount() < 0) {
-            if (incomeTransactionService.findTransaction(transaction.getId()) == null) {
+            if (incomeTransactionService.findTransaction(transaction) == null) {
                 moneySpentTransactionService.updateTransaction(transaction);
                 return "redirect:/home";
             }
@@ -93,7 +93,7 @@ public class TrackerController {
         model.addAttribute("totalexpenses", moneySpentTransactionService.total());
         model.addAttribute("incometrackerlist", incomeTransactionService.listOfIncomeTransaction());
         model.addAttribute("spentList", moneySpentTransactionService.listOfIncomeTransaction());
-        model.addAttribute("transaction", incomeTransactionService.findTransaction(id));
+        model.addAttribute("transaction", incomeTransactionService.findTransactionById(id));
         return "home";
     }
 
@@ -104,7 +104,7 @@ public class TrackerController {
         model.addAttribute("totalexpenses", moneySpentTransactionService.total());
         model.addAttribute("incometrackerlist", incomeTransactionService.listOfIncomeTransaction());
         model.addAttribute("spentList", moneySpentTransactionService.listOfIncomeTransaction());
-        model.addAttribute("transaction", moneySpentTransactionService.findTransaction(id));
+        model.addAttribute("transaction", moneySpentTransactionService.findTransactionById(id));
         return "home";
     }
 }

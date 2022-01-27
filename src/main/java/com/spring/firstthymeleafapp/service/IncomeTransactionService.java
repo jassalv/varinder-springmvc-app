@@ -39,15 +39,25 @@ public class IncomeTransactionService implements Processor<IncomeTransaction> {
     }
 
     @Override
-    public IncomeTransaction findTransaction(Integer id) {
-        Optional<IncomeTransaction> first = listOfIncomeTransaction().stream().filter(p -> p.getId().equals(id)).findFirst();
-        if(first == null){
+    public IncomeTransaction findTransaction(TransactionE transactionE) {
+        Optional<IncomeTransaction> first = listOfIncomeTransaction().stream()
+                .filter(p -> p.getId().equals(transactionE.getId())
+                && p.getName().equals(transactionE.getName())).findFirst();
+        if(first.isEmpty()){
             return null;
         }
+        System.out.println(first.toString());
+        return incomeDao.findById(transactionE.getId());
+    }
+
+    @Override
+    public IncomeTransaction findTransactionById(Integer id) {
         return incomeDao.findById(id);
     }
 
     public TransactionE updateTransaction(TransactionE incomeTransaction){
         return incomeDao.update(incomeTransaction);
+
+
     }
 }

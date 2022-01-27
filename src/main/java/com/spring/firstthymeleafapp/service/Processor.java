@@ -14,7 +14,9 @@ public interface Processor<T> {
 
     List<T>  listOfIncomeTransaction();
 
-    T findTransaction(Integer id);
+    T findTransaction(TransactionE transactionE);
+
+    T findTransactionById(Integer id);
 
     TransactionE updateTransaction(TransactionE t);
 }
