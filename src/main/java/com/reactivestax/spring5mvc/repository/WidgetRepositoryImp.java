@@ -14,6 +14,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Repository
 public class WidgetRepositoryImp implements WidgetRepository1{
@@ -32,16 +33,17 @@ public class WidgetRepositoryImp implements WidgetRepository1{
             ps.setString(2, widget.getDescription());
             return ps;
         }, generatedKeyHolder);
-        int widgetId = generatedKeyHolder.getKey().intValue();
-        widget.setId((long) widgetId);
+        Optional<Number> id =  Optional.ofNullable(generatedKeyHolder.getKey());
+        if(!id.isEmpty()){
+            widget.setId(Long.parseLong(String.valueOf(id.get())));
+        }
         return widget;
     }
 
     @Override
     public Widget findById(Integer id) {
         String query = "select id, Name, Description from widget_details where id = ?";
-        Widget widget = jdbcTemplate.queryForObject(query, new Object[]{id}, new BeanPropertyRowMapper<>(Widget.class));
-        return widget;
+        return jdbcTemplate.queryForObject(query, new Object[]{id}, new BeanPropertyRowMapper<>(Widget.class));
     }
 
     @Override
