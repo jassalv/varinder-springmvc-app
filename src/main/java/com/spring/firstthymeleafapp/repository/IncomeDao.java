@@ -1,8 +1,7 @@
 package com.spring.firstthymeleafapp.repository;
 
-import com.spring.firstthymeleafapp.Domain.IncomeTransaction;
-import com.spring.firstthymeleafapp.Domain.MoneySpendTransaction;
-import com.spring.firstthymeleafapp.Domain.TransactionE;
+import com.spring.firstthymeleafapp.model.IncomeTransaction;
+import com.spring.firstthymeleafapp.model.TransactionE;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;

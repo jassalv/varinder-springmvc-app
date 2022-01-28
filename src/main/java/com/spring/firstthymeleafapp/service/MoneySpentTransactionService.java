@@ -1,6 +1,6 @@
 package com.spring.firstthymeleafapp.service;
-import com.spring.firstthymeleafapp.Domain.MoneySpendTransaction;
-import com.spring.firstthymeleafapp.Domain.TransactionE;
+import com.spring.firstthymeleafapp.model.MoneySpendTransaction;
+import com.spring.firstthymeleafapp.model.TransactionE;
 import com.spring.firstthymeleafapp.repository.MoneySpentDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
