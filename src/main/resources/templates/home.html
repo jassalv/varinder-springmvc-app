@@ -30,12 +30,14 @@
             <tr>
                 <th>Name</th>
                 <th>Amount</th>
+                <th>View</th>
                 <th>Edit</th>
                 <th>Delete</th>
             </tr>
             <tr th:each="tracker : ${incometrackerlist}" th:object="${tracker}">
                 <td th:text="*{name}">Name</td>
                 <td th:text="*{amount}">Amount</td>
+                <td><a class="btn btn-default" href="#" th:href="@{'/home/view/income/' + *{id}}">View</a></td>
                 <td><a class="btn btn-default" href="#" th:href="@{'/home/edit/income/' + *{id}}">Edit</a></td>
                 <td><a class="btn btn-default" href="#" th:href="@{'/home/delete/income/' + *{id}}">Delete</a></td>
             </tr>
@@ -45,12 +47,14 @@
             <tr>
                 <th>Name</th>
                 <th>Amount</th>
+                <th>View</th>
                 <th>Edit</th>
                 <th>Delete</th>
             </tr>
             <tr th:each="tracker : ${spentList}" th:object="${tracker}">
                 <td th:text="*{name}">Name</td>
                 <td th:text="*{amount}">Amount</td>
+                <td><a class="btn btn-default" href="#" th:href="@{'/home/view/expense/' + *{id}}">View</a></td>
                 <td><a class="btn btn-default" href="#" th:href="@{'/home/edit/expense/' + *{id}}">Edit</a></td>
                 <td><a class="btn btn-default" href="#" th:href="@{'/home/delete/expense/' + *{id}}">Delete</a></td>
             </tr>

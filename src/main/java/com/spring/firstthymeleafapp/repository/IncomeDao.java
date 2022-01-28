@@ -21,7 +21,7 @@ public class IncomeDao implements CrudOperations<IncomeTransaction>{
     @Autowired
     JdbcTemplate jdbcTemplate;
 
-    private KeyHolder generatedKeyHolder = new GeneratedKeyHolder();
+     KeyHolder generatedKeyHolder = new GeneratedKeyHolder();
     
     @Override
     public TransactionE save(TransactionE incomeTransaction) {

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="style.css" th:href="@{/css/style.css}"/>
+  <title> Transaction Details </title>
+</head>
+
+
+<body>
+<div>
+  <form id="form" th:object="${transaction}" th:action="@{/home}">
+
+    <h2 th:text=" ${type} +'Transaction id # ' + *{id}"></h2>
+
+    <p th:text="'Transaction description : ' + *{name}"> Transaction Name </p>
+
+    <p th:text="'Amount : ' + *{amount}"> Amount </p>
+
+    <button class="btn">Go Back</button>
+  </form>
+</div>
+</body>
+</html>
