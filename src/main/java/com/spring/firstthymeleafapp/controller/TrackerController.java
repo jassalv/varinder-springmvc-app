@@ -5,6 +5,8 @@ import com.spring.firstthymeleafapp.service.IncomeTransactionService;
 import com.spring.firstthymeleafapp.service.MoneySpentTransactionService;
 import com.spring.firstthymeleafapp.service.TotalAmountCalculatorService;
 import com.spring.firstthymeleafapp.validator.BusinessValidator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,6 +26,7 @@ public class TrackerController {
     private static final String TRANSACTION = "transaction";
     private static final String RE_DIRECT = "redirect:/home";
 
+    Logger logger = LoggerFactory.getLogger(TrackerController.class);
 
     @Autowired
     IncomeTransactionService incomeTransactionService;
@@ -49,9 +52,9 @@ public class TrackerController {
     @PostMapping("/home/adding")
     public String postItems(@ModelAttribute("expense") TransactionE transaction, Model model) {
         if (businessValidator.checkIfAlreadyExist(transaction)) {
-            return RE_DIRECT;
+            logger.info("Updating results");
         }
-        if (businessValidator.isIncomeTransaction(transaction)) {
+        if (Boolean.TRUE.equals(businessValidator.isIncomeTransaction(transaction))) {
             incomeTransactionService.addTransaction(transaction);
         } else {
             moneySpentTransactionService.addTransaction(transaction);
