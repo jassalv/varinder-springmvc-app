@@ -16,6 +16,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 @Controller
 public class TrackerController {
 
+    private static final String TOTAL_BALANCE = "totalbalance";
+    private static final String TOTAL_INCOME = "totalincome";
+    private static final String TOTAL_EXPENSE = "totalexpenses";
+    private static final String INCOME_TRACKER_LIST = "incometrackerlist";
+    private static final String SPENT_LIST = "spentList";
+    private static final String TRANSACTION = "transaction";
+    private static final String RE_DIRECT = "redirect:/home";
+
+
     @Autowired
     IncomeTransactionService incomeTransactionService;
     @Autowired
@@ -27,60 +36,60 @@ public class TrackerController {
     BusinessValidator businessValidator;
 
     @GetMapping("/home")
-    String getHomePage(Model model) {
-        model.addAttribute("totalbalance", totalAmountCalculatorService.calculateTotalBalance());
-        model.addAttribute("totalincome", incomeTransactionService.total());
-        model.addAttribute("totalexpenses", moneySpentTransactionService.total());
-        model.addAttribute("incometrackerlist", incomeTransactionService.listOfIncomeTransaction());
-        model.addAttribute("spentList", moneySpentTransactionService.listOfIncomeTransaction());
-        model.addAttribute("transaction", new TransactionE());
+    public String getHomePage(Model model) {
+        model.addAttribute(TOTAL_BALANCE, totalAmountCalculatorService.calculateTotalBalance());
+        model.addAttribute(TOTAL_INCOME, incomeTransactionService.total());
+        model.addAttribute(TOTAL_EXPENSE, moneySpentTransactionService.total());
+        model.addAttribute(INCOME_TRACKER_LIST, incomeTransactionService.listOfIncomeTransaction());
+        model.addAttribute(SPENT_LIST, moneySpentTransactionService.listOfIncomeTransaction());
+        model.addAttribute(TRANSACTION, new TransactionE());
         return "home";
     }
 
     @PostMapping("/home/adding")
-    String postItems(@ModelAttribute("expense") TransactionE transaction, Model model) {
+    public String postItems(@ModelAttribute("expense") TransactionE transaction, Model model) {
         if (businessValidator.checkIfAlreadyExist(transaction)) {
-            return "redirect:/home";
+            return RE_DIRECT;
         }
         if (businessValidator.isIncomeTransaction(transaction)) {
             incomeTransactionService.addTransaction(transaction);
         } else {
             moneySpentTransactionService.addTransaction(transaction);
         }
-        return "redirect:/home";
+        return RE_DIRECT;
     }
 
     @GetMapping("/home/delete/income/{id}")
     public String deleteIncome(@PathVariable Integer id) {
         incomeTransactionService.deleteTransaction(id);
-        return "redirect:/home";
+        return RE_DIRECT;
     }
 
     @GetMapping("/home/delete/expense/{id}")
     public String deleteExpense(@PathVariable Integer id) {
         moneySpentTransactionService.deleteTransaction(id);
-        return "redirect:/home";
+        return RE_DIRECT;
     }
 
     @GetMapping("/home/edit/income/{id}")
     public String editIncome(@PathVariable Integer id, Model model) {
-        model.addAttribute("totalbalance", totalAmountCalculatorService.calculateTotalBalance());
-        model.addAttribute("totalincome", incomeTransactionService.total());
-        model.addAttribute("totalexpenses", moneySpentTransactionService.total());
-        model.addAttribute("incometrackerlist", incomeTransactionService.listOfIncomeTransaction());
-        model.addAttribute("spentList", moneySpentTransactionService.listOfIncomeTransaction());
-        model.addAttribute("transaction", incomeTransactionService.findTransactionById(id));
+        model.addAttribute(TOTAL_BALANCE, totalAmountCalculatorService.calculateTotalBalance());
+        model.addAttribute(TOTAL_INCOME, incomeTransactionService.total());
+        model.addAttribute(TOTAL_EXPENSE, moneySpentTransactionService.total());
+        model.addAttribute(INCOME_TRACKER_LIST, incomeTransactionService.listOfIncomeTransaction());
+        model.addAttribute(SPENT_LIST, moneySpentTransactionService.listOfIncomeTransaction());
+        model.addAttribute(TRANSACTION, incomeTransactionService.findTransactionById(id));
         return "home";
     }
 
     @GetMapping("/home/edit/expense/{id}")
     public String editExpense(@PathVariable Integer id, Model model) {
-        model.addAttribute("totalbalance", totalAmountCalculatorService.calculateTotalBalance());
-        model.addAttribute("totalincome", incomeTransactionService.total());
-        model.addAttribute("totalexpenses", moneySpentTransactionService.total());
-        model.addAttribute("incometrackerlist", incomeTransactionService.listOfIncomeTransaction());
-        model.addAttribute("spentList", moneySpentTransactionService.listOfIncomeTransaction());
-        model.addAttribute("transaction", moneySpentTransactionService.findTransactionById(id));
+        model.addAttribute(TOTAL_BALANCE, totalAmountCalculatorService.calculateTotalBalance());
+        model.addAttribute(TOTAL_INCOME, incomeTransactionService.total());
+        model.addAttribute(TOTAL_EXPENSE, moneySpentTransactionService.total());
+        model.addAttribute(INCOME_TRACKER_LIST, incomeTransactionService.listOfIncomeTransaction());
+        model.addAttribute(SPENT_LIST, moneySpentTransactionService.listOfIncomeTransaction());
+        model.addAttribute(TRANSACTION, incomeTransactionService.findTransactionById(id));
         return "home";
     }
 }

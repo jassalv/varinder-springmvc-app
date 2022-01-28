@@ -1,7 +1,6 @@
 package com.spring.firstthymeleafapp.service;
 
 import com.spring.firstthymeleafapp.model.TransactionE;
-import com.spring.firstthymeleafapp.abstractclasses.Balance;
 import com.spring.firstthymeleafapp.repository.IncomeDao;
 import com.spring.firstthymeleafapp.repository.MoneySpentDao;
 import org.springframework.beans.factory.annotation.Autowired;

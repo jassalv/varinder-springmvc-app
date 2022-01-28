@@ -12,7 +12,7 @@ import java.util.Optional;
 public class MoneySpentTransactionService implements Processor<MoneySpendTransaction> {
 
 
-    private List<MoneySpendTransaction> moneySpendTransactions = new ArrayList<>();
+    List<MoneySpendTransaction> moneySpendTransactions = new ArrayList<>();
 
     @Autowired
     MoneySpentDao moneySpentDao;
@@ -46,7 +46,6 @@ public class MoneySpentTransactionService implements Processor<MoneySpendTransac
         if(first.isEmpty()){
           return null;
         }
-        System.out.println(first.toString());
         return moneySpentDao.findById(transactionE.getId());
     }
 
@@ -58,7 +57,5 @@ public class MoneySpentTransactionService implements Processor<MoneySpendTransac
     @Override
     public TransactionE updateTransaction(TransactionE moneySpendTransaction) {
         return moneySpentDao.update(moneySpendTransaction);
-
-
     }
 }

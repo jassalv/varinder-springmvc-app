@@ -20,19 +20,17 @@ public class IncomeDao implements CrudOperations<IncomeTransaction>{
 
     @Autowired
     JdbcTemplate jdbcTemplate;
-    private KeyHolder generatedKeyHolder = new GeneratedKeyHolder();
+    KeyHolder generatedKeyHolder = new GeneratedKeyHolder();
     
     @Override
     public TransactionE save(TransactionE incomeTransaction) {
         String query = "insert into income (name, amount) values (?,?)";
-        Object[] args = new Object[]{incomeTransaction.getId(), incomeTransaction.getName(), incomeTransaction.getAmount()};
-        int i = jdbcTemplate.update(connection -> {
+        jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, incomeTransaction.getName());
             ps.setDouble(2, incomeTransaction.getAmount());
             return ps;
         }, generatedKeyHolder);
-        System.out.println(i);
         int id = generatedKeyHolder.getKey().intValue();
         incomeTransaction.setId( id);
         return incomeTransaction;
@@ -71,7 +69,7 @@ public class IncomeDao implements CrudOperations<IncomeTransaction>{
     public TransactionE update(TransactionE incomeTransaction) {
         String query = "update income set name=?, amount=? where Id=?";
         Object[] args = new Object[]{incomeTransaction.getName(), incomeTransaction.getAmount(), incomeTransaction.getId()};
-        int out = jdbcTemplate.update(query, args);
+        jdbcTemplate.update(query, args);
         return incomeTransaction;
     }
 }

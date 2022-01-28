@@ -29,10 +29,12 @@ public class DaoConfiguration {
         return new HikariDataSource(config);
 
     }
+
     @Bean
     public JdbcTemplate createTemplate(){
         JdbcTemplate jdbcTemplate = new JdbcTemplate();
         jdbcTemplate.setDataSource(createDataSource());
         return jdbcTemplate;
     }
+
 }

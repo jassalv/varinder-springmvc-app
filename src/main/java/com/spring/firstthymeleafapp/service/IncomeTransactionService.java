@@ -16,7 +16,7 @@ public class IncomeTransactionService implements Processor<IncomeTransaction> {
     @Autowired
     private IncomeDao incomeDao;
 
-    private List<IncomeTransaction> incomeTransactions = new ArrayList<>();
+     List<IncomeTransaction> incomeTransactions = new ArrayList<>();
 
     @Override
     public TransactionE addTransaction(TransactionE incomeTransaction) {
@@ -46,7 +46,6 @@ public class IncomeTransactionService implements Processor<IncomeTransaction> {
         if(first.isEmpty()){
             return null;
         }
-        System.out.println(first.toString());
         return incomeDao.findById(transactionE.getId());
     }
 
