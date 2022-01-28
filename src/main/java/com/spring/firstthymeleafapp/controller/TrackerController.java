@@ -53,11 +53,12 @@ public class TrackerController {
     public String postItems(@ModelAttribute("expense") TransactionE transaction, Model model) {
         if (businessValidator.checkIfAlreadyExist(transaction)) {
             logger.info("Updating results");
-        }
-        if (Boolean.TRUE.equals(businessValidator.isIncomeTransaction(transaction))) {
-            incomeTransactionService.addTransaction(transaction);
-        } else {
-            moneySpentTransactionService.addTransaction(transaction);
+        }else {
+            if (Boolean.TRUE.equals(businessValidator.isIncomeTransaction(transaction))) {
+                incomeTransactionService.addTransaction(transaction);
+            } else {
+                moneySpentTransactionService.addTransaction(transaction);
+            }
         }
         return RE_DIRECT;
     }

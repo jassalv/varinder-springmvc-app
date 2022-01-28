@@ -1,4 +1,5 @@
 package com.spring.firstthymeleafapp.repository;
+
 import com.spring.firstthymeleafapp.model.MoneySpendTransaction;
 import com.spring.firstthymeleafapp.model.TransactionE;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,24 +14,28 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+
 @Repository
 public class MoneySpentDao implements CrudOperations<MoneySpendTransaction> {
 
     @Autowired
     JdbcTemplate jdbcTemplate;
-    private KeyHolder generatedKeyHolder = new GeneratedKeyHolder();
+    KeyHolder generatedKeyHolder = new GeneratedKeyHolder();
 
     @Override
     public TransactionE save(TransactionE moneySpendTransaction) {
         String query = "insert into expenses (name, amount) values (?,?)";
-         jdbcTemplate.update(connection -> {
+        jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, moneySpendTransaction.getName());
             ps.setDouble(2, moneySpendTransaction.getAmount());
             return ps;
         }, generatedKeyHolder);
-        int id = generatedKeyHolder.getKey().intValue();
-        moneySpendTransaction.setId( id);
+            Optional<Number> id =  Optional.ofNullable(generatedKeyHolder.getKey());
+            if(!id.isEmpty()){
+                moneySpendTransaction.setId(Integer.parseInt(String.valueOf(id.get())));
+            }
         return moneySpendTransaction;
     }
 
@@ -67,7 +72,7 @@ public class MoneySpentDao implements CrudOperations<MoneySpendTransaction> {
     public TransactionE update(TransactionE moneySpendTransaction) {
         String query = "update expenses set name=?, amount=? where Id=?";
         Object[] args = new Object[]{moneySpendTransaction.getName(), moneySpendTransaction.getAmount(), moneySpendTransaction.getId()};
-         jdbcTemplate.update(query, args);
+        jdbcTemplate.update(query, args);
         return moneySpendTransaction;
     }
 
