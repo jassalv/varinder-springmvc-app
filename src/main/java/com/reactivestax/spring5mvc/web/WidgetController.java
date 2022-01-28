@@ -18,6 +18,8 @@ public class WidgetController {
     WidgetRepositoryImp widgetRepositoryImp;
 
     private Widget widget1 =null;
+
+    private static final String  WIDGET = "widget";
     /**
      * Load the new widget page.
      * @param model
@@ -25,7 +27,7 @@ public class WidgetController {
      */
     @GetMapping("/widget/new")
     public String newWidget(Model model) {
-        model.addAttribute("widget", new Widget());
+        model.addAttribute(WIDGET, new Widget());
         return "widgetform";
     }
 
@@ -55,8 +57,8 @@ public class WidgetController {
     @GetMapping("/widget/{id}")
     public ModelAndView getWidgetById(@PathVariable Long id, Model model) {
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("widget");
-        modelAndView.addObject("widget", widgetRepositoryImp.findById(Math.toIntExact(id)));
+        modelAndView.setViewName(WIDGET);
+        modelAndView.addObject(WIDGET, widgetRepositoryImp.findById(Math.toIntExact(id)));
         return  modelAndView;
     }
 
@@ -80,7 +82,7 @@ public class WidgetController {
     @GetMapping("/widget/edit/{id}")
     public String editWidget(@PathVariable Long id, Model model) {
         widget1 = widgetRepositoryImp.findById(Math.toIntExact(id));
-       model.addAttribute("widget", widget1);
+       model.addAttribute(WIDGET, widget1);
         return "widgetform";
     }
 
