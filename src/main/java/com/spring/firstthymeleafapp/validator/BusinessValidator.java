@@ -13,7 +13,7 @@ public class BusinessValidator implements Validator<TransactionE>{
     @Autowired
     MoneySpentTransactionService moneySpentTransactionService;
 
-    public boolean checkIfAlreadyExist(TransactionE transaction){
+    public Boolean checkIfAlreadyExist(TransactionE transaction){
         if (transaction.getId() != null && transaction.getAmount() >= 0) {
             if (moneySpentTransactionService.findTransaction(transaction) == null) {
                 incomeTransactionService.updateTransaction(transaction);
@@ -38,9 +38,8 @@ public class BusinessValidator implements Validator<TransactionE>{
     public Boolean isIncomeTransaction(TransactionE transactionE){
         if(transactionE.getAmount()>0){
             return true;
-        }else {
-            return false;
         }
+            return false;
     }
 
 }
