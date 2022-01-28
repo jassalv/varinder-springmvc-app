@@ -89,7 +89,7 @@ public class TrackerController {
         model.addAttribute(TOTAL_EXPENSE, moneySpentTransactionService.total());
         model.addAttribute(INCOME_TRACKER_LIST, incomeTransactionService.listOfIncomeTransaction());
         model.addAttribute(SPENT_LIST, moneySpentTransactionService.listOfIncomeTransaction());
-        model.addAttribute(TRANSACTION, incomeTransactionService.findTransactionById(id));
+        model.addAttribute(TRANSACTION, moneySpentTransactionService.findTransactionById(id));
         return "home";
     }
 }
