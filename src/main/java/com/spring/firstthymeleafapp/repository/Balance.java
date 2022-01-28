@@ -1,4 +1,4 @@
-package com.spring.firstthymeleafapp.abstractclasses;
+package com.spring.firstthymeleafapp.repository;
 
 
 public interface Balance {
