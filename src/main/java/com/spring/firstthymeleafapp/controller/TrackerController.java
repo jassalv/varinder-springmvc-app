@@ -74,6 +74,18 @@ public class TrackerController {
         moneySpentTransactionService.deleteTransaction(id);
         return RE_DIRECT;
     }
+    @GetMapping("/home/view/income/{id}")
+    public String viewIncomeTransaction(@PathVariable Integer id, Model model){
+        model.addAttribute(TRANSACTION,incomeTransactionService.findTransactionById(id));
+        model.addAttribute("type","Income");
+        return "view";
+    }
+    @GetMapping("/home/view/expense/{id}")
+    public String viewExpenseTransaction(@PathVariable Integer id, Model model){
+        model.addAttribute(TRANSACTION,moneySpentTransactionService.findTransactionById(id));
+        model.addAttribute("type","Expense");
+        return "view";
+    }
 
     @GetMapping("/home/edit/income/{id}")
     public String editIncome(@PathVariable Integer id, Model model) {
