@@ -1,6 +1,6 @@
 package com.spring.firstthymeleafapp.repository;
 
-import com.spring.firstthymeleafapp.Domain.TransactionE;
+import com.spring.firstthymeleafapp.model.TransactionE;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.spring.firstthymeleafapp.Domain;
+package com.spring.firstthymeleafapp.model;
 
 import org.springframework.stereotype.Component;
 
