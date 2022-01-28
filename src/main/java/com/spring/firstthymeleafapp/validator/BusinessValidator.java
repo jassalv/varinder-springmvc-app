@@ -36,10 +36,7 @@ public class BusinessValidator implements Validator<TransactionE>{
 
     @Override
     public Boolean isIncomeTransaction(TransactionE transactionE){
-        if(transactionE.getAmount()>0){
-            return true;
-        }
-            return false;
+        return transactionE.getAmount() > 0;
     }
 
 }

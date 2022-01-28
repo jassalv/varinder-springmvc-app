@@ -13,6 +13,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+
 @Repository
 public class MoneySpentDao implements CrudOperations<MoneySpendTransaction> {
 
@@ -31,8 +33,10 @@ public class MoneySpentDao implements CrudOperations<MoneySpendTransaction> {
             return ps;
         }, generatedKeyHolder);
 
-         int id = generatedKeyHolder.getKey().intValue();
-        moneySpendTransaction.setId( id);
+        Optional<Number> id =  Optional.ofNullable(generatedKeyHolder.getKey());
+        if(!id.isEmpty()){
+            moneySpendTransaction.setId(Integer.parseInt(String.valueOf(id.get())));
+        }
         return moneySpendTransaction;
     }
 

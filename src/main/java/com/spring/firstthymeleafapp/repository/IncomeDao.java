@@ -8,13 +8,12 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-
-import javax.validation.constraints.NotNull;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Repository
 public class IncomeDao implements CrudOperations<IncomeTransaction>{
@@ -33,8 +32,10 @@ public class IncomeDao implements CrudOperations<IncomeTransaction>{
             ps.setDouble(2, incomeTransaction.getAmount());
             return ps;
         }, generatedKeyHolder);
-        int id = generatedKeyHolder.getKey().intValue();
-        incomeTransaction.setId( id);
+        Optional<Number> id =  Optional.ofNullable(generatedKeyHolder.getKey());
+        if(!id.isEmpty()){
+            incomeTransaction.setId(Integer.parseInt(String.valueOf(id.get())));
+        }
         return incomeTransaction;
     }
 
