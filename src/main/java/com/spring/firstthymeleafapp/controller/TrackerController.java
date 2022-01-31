@@ -1,9 +1,10 @@
 package com.spring.firstthymeleafapp.controller;
 
-import com.spring.firstthymeleafapp.model.TransactionE;
-import com.spring.firstthymeleafapp.service.IncomeTransactionService;
-import com.spring.firstthymeleafapp.service.MoneySpentTransactionService;
+import com.spring.firstthymeleafapp.model.TransactionEResource;
+import com.spring.firstthymeleafapp.model.TransactionSummary;
+import com.spring.firstthymeleafapp.model.TransactionType;
 import com.spring.firstthymeleafapp.service.TotalAmountCalculatorService;
+import com.spring.firstthymeleafapp.service.TransactionService;
 import com.spring.firstthymeleafapp.validator.BusinessValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,85 +29,65 @@ public class TrackerController {
 
     Logger logger = LoggerFactory.getLogger(TrackerController.class);
 
+
     @Autowired
-    IncomeTransactionService incomeTransactionService;
-    @Autowired
-    MoneySpentTransactionService moneySpentTransactionService;
+    TransactionService transactionService;
     @Autowired
     TotalAmountCalculatorService totalAmountCalculatorService;
     Integer id = 0;
     @Autowired
     BusinessValidator businessValidator;
+    @Autowired
+    TransactionSummary transactionSummary;
 
     @GetMapping("/home")
     public String getHomePage(Model model) {
-        model.addAttribute(TOTAL_BALANCE, totalAmountCalculatorService.calculateTotalBalance());
-        model.addAttribute(TOTAL_INCOME, incomeTransactionService.total());
-        model.addAttribute(TOTAL_EXPENSE, moneySpentTransactionService.total());
-        model.addAttribute(INCOME_TRACKER_LIST, incomeTransactionService.listOfIncomeTransaction());
-        model.addAttribute(SPENT_LIST, moneySpentTransactionService.listOfIncomeTransaction());
-        model.addAttribute(TRANSACTION, new TransactionE());
+        model.addAttribute(TOTAL_BALANCE, transactionService.findSum().getBalance());
+        model.addAttribute(TOTAL_INCOME, transactionService.findSum().getIncome());
+        model.addAttribute(TOTAL_EXPENSE, transactionService.findSum().getExpense());
+        model.addAttribute(INCOME_TRACKER_LIST, transactionService.listOfIncomeTransaction());
+        model.addAttribute(TRANSACTION, new TransactionEResource());
         return "home";
     }
 
     @PostMapping("/home/adding")
-    public String postItems(@ModelAttribute("expense") TransactionE transaction, Model model) {
-        if (businessValidator.checkIfAlreadyExist(transaction)) {
+    public String postItems(@ModelAttribute("expense") TransactionEResource transaction, Model model) {
+        if (transaction.getId() !=null) {
+            transactionService.updateTransaction(transaction);
             logger.info("Updating results");
-        }else {
-            if (Boolean.TRUE.equals(businessValidator.isIncomeTransaction(transaction))) {
-                incomeTransactionService.addTransaction(transaction);
-            } else {
-                moneySpentTransactionService.addTransaction(transaction);
+        } else {
+            if(transaction.getAmount()>0){
+                transaction.setTransactionType(TransactionType.INCOME);
+            }else{
+                transaction.setTransactionType(TransactionType.EXPENSE);
             }
+                transactionService.addTransaction(transaction);
         }
         return RE_DIRECT;
     }
 
-    @GetMapping("/home/delete/income/{id}")
+    @GetMapping("/home/delete/{id}")
     public String deleteIncome(@PathVariable Integer id) {
-        incomeTransactionService.deleteTransaction(id);
+        transactionService.deleteTransaction(id);
         return RE_DIRECT;
     }
 
-    @GetMapping("/home/delete/expense/{id}")
-    public String deleteExpense(@PathVariable Integer id) {
-        moneySpentTransactionService.deleteTransaction(id);
-        return RE_DIRECT;
-    }
-    @GetMapping("/home/view/income/{id}")
-    public String viewIncomeTransaction(@PathVariable Integer id, Model model){
-        model.addAttribute(TRANSACTION,incomeTransactionService.findTransactionById(id));
-        model.addAttribute("type","Income");
-        return "view";
-    }
-    @GetMapping("/home/view/expense/{id}")
-    public String viewExpenseTransaction(@PathVariable Integer id, Model model){
-        model.addAttribute(TRANSACTION,moneySpentTransactionService.findTransactionById(id));
-        model.addAttribute("type","Expense");
+    @GetMapping("/home/view/{id}")
+    public String viewIncomeTransaction(@PathVariable Integer id, Model model) {
+        model.addAttribute(TRANSACTION, transactionService.findTransactionById(id));
+        model.addAttribute("type", "Income");
         return "view";
     }
 
     @GetMapping("/home/edit/income/{id}")
     public String editIncome(@PathVariable Integer id, Model model) {
-        model.addAttribute(TOTAL_BALANCE, totalAmountCalculatorService.calculateTotalBalance());
-        model.addAttribute(TOTAL_INCOME, incomeTransactionService.total());
-        model.addAttribute(TOTAL_EXPENSE, moneySpentTransactionService.total());
-        model.addAttribute(INCOME_TRACKER_LIST, incomeTransactionService.listOfIncomeTransaction());
-        model.addAttribute(SPENT_LIST, moneySpentTransactionService.listOfIncomeTransaction());
-        model.addAttribute(TRANSACTION, incomeTransactionService.findTransactionById(id));
+        model.addAttribute(TOTAL_BALANCE, transactionService.findSum().getBalance());
+        model.addAttribute(TOTAL_INCOME, transactionService.findSum().getIncome());
+        model.addAttribute(TOTAL_EXPENSE, transactionService.findSum().getExpense());
+        model.addAttribute(INCOME_TRACKER_LIST, transactionService.listOfIncomeTransaction());
+        model.addAttribute(TRANSACTION, new TransactionEResource());
         return "home";
     }
 
-    @GetMapping("/home/edit/expense/{id}")
-    public String editExpense(@PathVariable Integer id, Model model) {
-        model.addAttribute(TOTAL_BALANCE, totalAmountCalculatorService.calculateTotalBalance());
-        model.addAttribute(TOTAL_INCOME, incomeTransactionService.total());
-        model.addAttribute(TOTAL_EXPENSE, moneySpentTransactionService.total());
-        model.addAttribute(INCOME_TRACKER_LIST, incomeTransactionService.listOfIncomeTransaction());
-        model.addAttribute(SPENT_LIST, moneySpentTransactionService.listOfIncomeTransaction());
-        model.addAttribute(TRANSACTION, moneySpentTransactionService.findTransactionById(id));
-        return "home";
-    }
 }
 

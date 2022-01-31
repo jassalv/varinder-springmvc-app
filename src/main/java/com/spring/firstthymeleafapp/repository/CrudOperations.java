@@ -1,12 +1,13 @@
 package com.spring.firstthymeleafapp.repository;
 
-import com.spring.firstthymeleafapp.model.TransactionE;
+import com.spring.firstthymeleafapp.model.TransactionEResource;
+import com.spring.firstthymeleafapp.model.TransactionSummary;
 
 import java.util.List;
 
 public interface CrudOperations<T> {
 
-    TransactionE save(TransactionE t);
+    TransactionEResource save(TransactionEResource t);
 
     T findById(Integer id);
 
@@ -14,6 +15,8 @@ public interface CrudOperations<T> {
 
     Integer deleteById(Integer id);
 
-    TransactionE update(TransactionE t);
+    TransactionEResource update(TransactionEResource t);
+
+    TransactionSummary findSum();
 
 }
