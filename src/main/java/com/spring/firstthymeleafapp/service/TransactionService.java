@@ -1,30 +1,39 @@
 package com.spring.firstthymeleafapp.service;
 
-import com.spring.firstthymeleafapp.model.TransactionEResource;
-import com.spring.firstthymeleafapp.model.TransactionSummary;
+import com.spring.firstthymeleafapp.dto.TransactionEntity;
+import com.spring.firstthymeleafapp.dto.TransactionMapper;
+import com.spring.firstthymeleafapp.model.TransactionResource;
+import com.spring.firstthymeleafapp.repository.CalculatorRepositoryImp;
 import com.spring.firstthymeleafapp.repository.IncomeDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
-public class TransactionService implements Processor<TransactionEResource> {
+public class TransactionService implements Processor<TransactionResource> {
 
     @Autowired
     private IncomeDao incomeDao;
 
-    List<TransactionEResource> incomeTransactions = new ArrayList<>();
+    @Autowired
+    CalculatorRepositoryImp calculatorRepositoryImp;
+
+
+    List<TransactionResource> incomeTransactions = new ArrayList<>();
 
     @Override
-    public TransactionEResource addTransaction(TransactionEResource incomeTransaction) {
-        return incomeDao.save(incomeTransaction);
+    public TransactionResource addTransaction(TransactionResource incomeTransaction) {
+        TransactionEntity save = incomeDao.save(TransactionMapper.INSTANCE.toDto(incomeTransaction));
+        return TransactionMapper.INSTANCE.toResource(save);
     }
 
-    public List<TransactionEResource> listOfIncomeTransaction() {
-        incomeTransactions = incomeDao.fillAll();
+    public List<TransactionResource> listOfIncomeTransaction() {
+        incomeTransactions = incomeDao.fillAll().stream()
+                .map(TransactionMapper.INSTANCE::toResource)
+                .collect(Collectors.toList());
         return incomeTransactions;
     }
 
@@ -35,28 +44,17 @@ public class TransactionService implements Processor<TransactionEResource> {
 
     @Override
     public Double total() {
-        return listOfIncomeTransaction().stream().mapToDouble(TransactionEResource::getAmount).sum();
+        return listOfIncomeTransaction().stream().mapToDouble(TransactionResource::getAmount).sum();
     }
 
     @Override
-    public TransactionEResource findTransaction(TransactionEResource transactionEResource) {
-        Optional<TransactionEResource> first = listOfIncomeTransaction().stream()
-                .filter(p -> p.getId().equals(transactionEResource.getId())
-                        && p.getName().equals(transactionEResource.getName())).findFirst();
-        if (first.isEmpty()) {
-            return null;}
-        return incomeDao.findById(transactionEResource.getId());}
-
-    @Override
-    public TransactionEResource findTransactionById(Integer id) {
-        return incomeDao.findById(id);
+    public TransactionResource findTransactionById(Integer id) {
+        return TransactionMapper.INSTANCE.toResource(incomeDao.findById(id));
     }
 
-    public TransactionEResource updateTransaction(TransactionEResource incomeTransaction) {
-        return incomeDao.update(incomeTransaction);
+    public TransactionResource updateTransaction(TransactionResource incomeTransaction) {
+        TransactionEntity update = incomeDao.update(TransactionMapper.INSTANCE.toDto(incomeTransaction));
+        return TransactionMapper.INSTANCE.toResource(update);
     }
 
-    public TransactionSummary findSum(){
-        return incomeDao.findSum();
-    }
 }

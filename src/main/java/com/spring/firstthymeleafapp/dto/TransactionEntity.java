@@ -17,6 +17,6 @@ public class TransactionEntity {
     String name = null;
     Double amount = 0.0;
     Integer id;
-    Date addedDate;
+    Date createdDate;
     Date updatedDate;
 }

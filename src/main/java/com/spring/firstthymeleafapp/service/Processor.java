@@ -1,12 +1,12 @@
 package com.spring.firstthymeleafapp.service;
 
-import com.spring.firstthymeleafapp.model.TransactionEResource;
+import com.spring.firstthymeleafapp.model.TransactionResource;
 
 import java.util.List;
 
 public interface Processor<T> {
 
-    TransactionEResource addTransaction(TransactionEResource t);
+    TransactionResource addTransaction(TransactionResource t);
 
     void deleteTransaction(Integer id);
 
@@ -14,10 +14,8 @@ public interface Processor<T> {
 
     List<T>  listOfIncomeTransaction();
 
-    T findTransaction(TransactionEResource transactionEResource);
-
     T findTransactionById(Integer id);
 
-    TransactionEResource updateTransaction(TransactionEResource t);
+    TransactionResource updateTransaction(TransactionResource t);
 
 }
