@@ -1,4 +1,5 @@
 package com.spring.firstthymeleafapp.model;
+import com.spring.firstthymeleafapp.validator.NotZero;
 import lombok.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -18,6 +19,7 @@ public class TransactionResource {
     String name = null;
 
     @NotNull(message = "Amount cannot be null")
+    @NotZero(message = "Amount cannot be zero")
     Double amount;
 
     Integer id;
