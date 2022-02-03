@@ -10,7 +10,7 @@ public interface CrudOperations<T> {
 
     T findById(Integer id);
 
-    List<T> fillAll();
+    List<T> findAll();
 
     Integer deleteById(Integer id);
 

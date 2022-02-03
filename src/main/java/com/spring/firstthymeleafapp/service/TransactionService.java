@@ -1,60 +1,48 @@
 package com.spring.firstthymeleafapp.service;
-
 import com.spring.firstthymeleafapp.dto.TransactionEntity;
-import com.spring.firstthymeleafapp.dto.TransactionMapper;
-import com.spring.firstthymeleafapp.model.TransactionResource;
 import com.spring.firstthymeleafapp.repository.CalculatorRepositoryImp;
-import com.spring.firstthymeleafapp.repository.IncomeDao;
+import com.spring.firstthymeleafapp.repository.TransactionDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
-public class TransactionService implements Processor<TransactionResource> {
+public class TransactionService implements Processor<TransactionEntity> {
 
     @Autowired
-    private IncomeDao incomeDao;
+    private TransactionDao transactionDao;
 
     @Autowired
     CalculatorRepositoryImp calculatorRepositoryImp;
 
 
-    List<TransactionResource> incomeTransactions = new ArrayList<>();
+    List<TransactionEntity> incomeTransactions = new ArrayList<>();
 
     @Override
-    public TransactionResource addTransaction(TransactionResource incomeTransaction) {
-        TransactionEntity save = incomeDao.save(TransactionMapper.INSTANCE.toDto(incomeTransaction));
-        return TransactionMapper.INSTANCE.toResource(save);
+    public TransactionEntity addTransaction(TransactionEntity transactionEntity) {
+        return transactionDao.save(transactionEntity);
     }
 
-    public List<TransactionResource> listOfIncomeTransaction() {
-        incomeTransactions = incomeDao.fillAll().stream()
-                .map(TransactionMapper.INSTANCE::toResource)
-                .collect(Collectors.toList());
-        return incomeTransactions;
+    @Override
+    public List<TransactionEntity> listOfIncomeTransaction() {
+
+        return transactionDao.findAll();
     }
 
     @Override
     public void deleteTransaction(Integer id) {
-        incomeDao.deleteById(id);
+        transactionDao.deleteById(id);
     }
 
     @Override
-    public Double total() {
-        return listOfIncomeTransaction().stream().mapToDouble(TransactionResource::getAmount).sum();
+    public TransactionEntity findTransactionById(Integer id) {
+        return transactionDao.findById(id);
     }
 
-    @Override
-    public TransactionResource findTransactionById(Integer id) {
-        return TransactionMapper.INSTANCE.toResource(incomeDao.findById(id));
-    }
-
-    public TransactionResource updateTransaction(TransactionResource incomeTransaction) {
-        TransactionEntity update = incomeDao.update(TransactionMapper.INSTANCE.toDto(incomeTransaction));
-        return TransactionMapper.INSTANCE.toResource(update);
+    public TransactionEntity updateTransaction(TransactionEntity transactionEntity) {
+        return transactionDao.update(transactionEntity);
     }
 
 }

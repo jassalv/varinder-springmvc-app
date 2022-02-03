@@ -14,11 +14,12 @@ public interface TransactionMapper {
     @Mapping(source = "name", target = "name")
     @Mapping(source = "amount" , target = "amount")
     @Mapping(source = "id",target = "id")
-    TransactionEntity toDto(TransactionResource transactionResource);
+    TransactionEntity toEntity(TransactionResource transactionResource);
 
     @Mapping(source="transactionType", target="transactionType")
     @Mapping(source = "name", target = "name")
     @Mapping(source = "amount" , target = "amount")
     @Mapping(source = "id",target = "id")
-    TransactionResource toResource(TransactionEntity transaction);
+    TransactionResource toDto(TransactionEntity transaction);
+
 }

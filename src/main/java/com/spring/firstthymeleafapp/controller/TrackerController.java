@@ -1,18 +1,24 @@
 package com.spring.firstthymeleafapp.controller;
 
+import com.spring.firstthymeleafapp.dto.TransactionMapper;
 import com.spring.firstthymeleafapp.model.TransactionResource;
 import com.spring.firstthymeleafapp.model.TransactionType;
 import com.spring.firstthymeleafapp.service.Calculator;
 import com.spring.firstthymeleafapp.service.TransactionService;
-import com.spring.firstthymeleafapp.validator.BusinessValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import javax.validation.Valid;
+import java.util.stream.Collectors;
 
 @Controller
 public class TrackerController {
@@ -30,8 +36,6 @@ public class TrackerController {
     @Autowired
     TransactionService transactionService;
     @Autowired
-    BusinessValidator businessValidator;
-    @Autowired
     Calculator calculator;
 
     @GetMapping("/home")
@@ -39,15 +43,26 @@ public class TrackerController {
         model.addAttribute(TOTAL_BALANCE, calculator.totalBalance());
         model.addAttribute(TOTAL_INCOME, calculator.totalIncome());
         model.addAttribute(TOTAL_EXPENSE, calculator.totalExpense());
-        model.addAttribute(INCOME_TRACKER_LIST, transactionService.listOfIncomeTransaction());
+        model.addAttribute(INCOME_TRACKER_LIST, transactionService.listOfIncomeTransaction()
+                .stream().map(TransactionMapper.INSTANCE::toDto)
+                .collect(Collectors.toList()));
         model.addAttribute(TRANSACTION, new TransactionResource());
         return "home";
     }
 
     @PostMapping("/home/add")
-    public String postTransaction(TransactionResource transaction, Model model) {
+    public String postTransaction(@Valid @ModelAttribute("transaction")TransactionResource transaction, BindingResult result, Model model) {
+        if(result.hasErrors()){
+            model.addAttribute(TOTAL_BALANCE, calculator.totalBalance());
+            model.addAttribute(TOTAL_INCOME, calculator.totalIncome());
+            model.addAttribute(TOTAL_EXPENSE, calculator.totalExpense());
+            model.addAttribute(INCOME_TRACKER_LIST, transactionService.listOfIncomeTransaction()
+                    .stream().map(TransactionMapper.INSTANCE::toDto)
+                    .collect(Collectors.toList()));
+            return "home";
+        }
         if (transaction.getId() != null) {
-            transactionService.updateTransaction(transaction);
+            transactionService.updateTransaction(TransactionMapper.INSTANCE.toEntity(transaction));
             logger.info("Updating results");
         } else {
             if (transaction.getAmount() > 0) {
@@ -55,7 +70,7 @@ public class TrackerController {
             } else {
                 transaction.setTransactionType(TransactionType.EXPENSE);
             }
-            transactionService.addTransaction(transaction);
+            transactionService.addTransaction(TransactionMapper.INSTANCE.toEntity(transaction));
         }
         return RE_DIRECT;
     }
@@ -68,7 +83,8 @@ public class TrackerController {
 
     @GetMapping("/home/view/{id}")
     public String viewTransaction(@PathVariable Integer id, Model model) {
-        model.addAttribute(TRANSACTION, transactionService.findTransactionById(id));
+        model.addAttribute(TRANSACTION, TransactionMapper.INSTANCE
+                .toDto(transactionService.findTransactionById(id)));
         model.addAttribute("type", "Income");
         return "view";
     }
@@ -78,7 +94,10 @@ public class TrackerController {
         model.addAttribute(TOTAL_BALANCE, calculator.totalBalance());
         model.addAttribute(TOTAL_INCOME, calculator.totalIncome());
         model.addAttribute(TOTAL_EXPENSE, calculator.totalExpense());
-        model.addAttribute(INCOME_TRACKER_LIST, transactionService.listOfIncomeTransaction());
+        model.addAttribute(INCOME_TRACKER_LIST, transactionService.listOfIncomeTransaction()
+                .stream()
+                .map(TransactionMapper.INSTANCE::toDto)
+                .collect(Collectors.toList()));
         model.addAttribute(TRANSACTION, transactionService.findTransactionById(id));
         return "home";
     }

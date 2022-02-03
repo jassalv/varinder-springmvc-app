@@ -1,21 +1,19 @@
 package com.spring.firstthymeleafapp.service;
 
-import com.spring.firstthymeleafapp.model.TransactionResource;
+import com.spring.firstthymeleafapp.dto.TransactionEntity;
 
 import java.util.List;
 
 public interface Processor<T> {
 
-    TransactionResource addTransaction(TransactionResource t);
+    TransactionEntity addTransaction(TransactionEntity t);
 
     void deleteTransaction(Integer id);
-
-    Double total();
 
     List<T>  listOfIncomeTransaction();
 
     T findTransactionById(Integer id);
 
-    TransactionResource updateTransaction(TransactionResource t);
+    TransactionEntity updateTransaction(TransactionEntity t);
 
 }
