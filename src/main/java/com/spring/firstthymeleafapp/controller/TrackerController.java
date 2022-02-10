@@ -51,8 +51,8 @@ public class TrackerController {
     }
 
     @PostMapping("/home/add")
-    public String postTransaction(@Valid @ModelAttribute("transaction")TransactionResource transaction, BindingResult result, Model model) {
-        if(result.hasErrors()){
+    public String postTransaction(@Valid @ModelAttribute("transaction") TransactionResource transaction, BindingResult result, Model model) {
+        if (result.hasErrors()) {
             model.addAttribute(TOTAL_BALANCE, calculator.totalBalance());
             model.addAttribute(TOTAL_INCOME, calculator.totalIncome());
             model.addAttribute(TOTAL_EXPENSE, calculator.totalExpense());
